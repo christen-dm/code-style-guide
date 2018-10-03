@@ -1,0 +1,15 @@
+{
+  "name": "dm-style-guide",
+  "version": "0.1.0",
+  "description": "A code style guide for development within Digital Maelstrom",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "toc": "markdown-toc -i general-style-guide.md"
+  },
+  "author": "Christen Ward",
+  "license": "ISC",
+  "devDependencies": {
+    "markdown-toc": "^1.2.0"
+  }
+}
