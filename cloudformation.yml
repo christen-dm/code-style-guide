@@ -44,21 +44,6 @@ Resources:
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: 404.html
-        
-  SiteBucketPolicy:
-    Type: "AWS::S3::BucketPolicy"
-    DependsOn: SiteBucket
-    Properties: 
-      Bucket: !Ref SiteBucket
-      PolicyDocument: 
-        Statement: 
-          -
-            Action: 
-              - "s3:GetObject"
-            Effect: "Allow"
-            Resource: 
-              - !GetAtt SiteBucket.Arn
-            Principal: "*"
             
   ArtifactStoreBucket:
     Type: 'AWS::S3::Bucket'
@@ -105,6 +90,13 @@ Resources:
                 Resource:
                   - !GetAtt SiteBucket.Arn
                   - !Sub '${SiteBucket.Arn}/*'
+              - Effect: Allow
+                Action:
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                Resource:
+                  - '*'
 
   CodeBuildBuild:
     Type: 'AWS::CodeBuild::Project'
@@ -123,6 +115,7 @@ Resources:
                 - curl --silent --location https://rpm.nodesource.com/setup_8.x | bash -
                 - yum -y install nodejs
                 # Install Jekyll, bundler, and dependencies
+                - yum -y install git-core
                 - gem install jekyll bundler
                 - bundle install
                 - npm install
@@ -218,9 +211,9 @@ Resources:
                 Provider: CodeBuild
                 Version: 1
               InputArtifacts:
-                - Name: Installed
+                - Name: Source
               OutputArtifacts:
-                - Name: Dist
+                - Name: _site
               Configuration:
                 ProjectName: !Ref CodeBuildBuild
               RunOrder: 1
