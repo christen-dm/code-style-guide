@@ -44,6 +44,21 @@ Resources:
       WebsiteConfiguration:
         IndexDocument: index.html
         ErrorDocument: 404.html
+
+  SiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref SiteBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Sid: PublicReadAccess
+          Effect: Allow
+          Principal: "*"
+          Action:
+          - s3:GetObject
+          Resource: !Sub '${SiteBucket.Arn}/*'
+
             
   ArtifactStoreBucket:
     Type: 'AWS::S3::Bucket'
